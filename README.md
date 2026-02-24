@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+### Routes Structure
+
+![frontend-routes-structure](routes-plan-1.png)
+
 ## Getting Started
 
 First, run the development server:
