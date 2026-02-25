@@ -1,7 +1,8 @@
-export default function ConsultationDoctorByIdPage() {
+
+const ConsultationDoctorByIdPage = () => {
   return (
-    <div>
-      <h2>ConsultationDoctorByIdPage</h2>
-    </div>
-  );
+    <div>ConsultationDoctorByIdPage</div>
+  )
 }
+
+export default ConsultationDoctorByIdPage
