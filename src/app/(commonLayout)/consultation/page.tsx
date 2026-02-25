@@ -1,21 +1,19 @@
-import DoctorsList from "@/components/modules/Consultation/DoctorsList";
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { getDoctors } from "./_actions";
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { getDoctors } from './_actions';
+import DoctorsList from '@/components/modules/Consultation/DoctorsList';
 
-const ConsultationPage = async () => {
+export default async function ConsultationPage() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["doctors"],
+    queryKey: ['doctors'],
     queryFn: getDoctors,
   });
- return (
-   // Neat! Serialization is now as easy as passing props.
-   // HydrationBoundary is a Client Component, so hydration will happen there.
-   <HydrationBoundary state={dehydrate(queryClient)}>
+  return (
+    // Neat! Serialization is now as easy as passing props.
+    // HydrationBoundary is a Client Component, so hydration will happen there.
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <DoctorsList />
-   </HydrationBoundary>
- );
+    </HydrationBoundary>
+  );
 }
-
-export default ConsultationPage
