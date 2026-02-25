@@ -1,7 +1,8 @@
-export default function MedicinePage() {
+
+const MedicinePage = () => {
   return (
-    <div>
-      <h2>MedicinePage</h2>
-    </div>
-  );
+    <div>MedicinePage</div>
+  )
 }
+
+export default MedicinePage
