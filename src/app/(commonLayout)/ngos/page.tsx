@@ -1,7 +1,8 @@
-export default function NGOsPage() {
+
+const NGOsPage = () => {
   return (
-    <div>
-      <h2>NGOsPage</h2>
-    </div>
-  );
+    <div>NGOsPage</div>
+  )
 }
+
+export default NGOsPage

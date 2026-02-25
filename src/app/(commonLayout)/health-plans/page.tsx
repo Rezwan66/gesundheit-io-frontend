@@ -1,7 +1,8 @@
-export default function HealthPlansPage() {
+
+const HealthPlansPage = () => {
   return (
-    <div>
-      <h2>HealthPlansPage</h2>
-    </div>
-  );
+    <div>HealthPlansPage</div>
+  )
 }
+
+export default HealthPlansPage
