@@ -1,8 +1,12 @@
 // In Next.js, this file would be called: app/providers.tsx
-'use client';
+"use client";
 
 // Since QueryClientProvider relies on useContext under the hood, we have to put 'use client' on top
-import { isServer, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+    isServer,
+    QueryClient,
+    QueryClientProvider,
+} from "@tanstack/react-query";
 import { ReactQueryStreamedHydration } from '@tanstack/react-query-next-experimental';
 
 function makeQueryClient() {
@@ -42,7 +46,9 @@ export default function QueryProviders({ children }: { children: React.ReactNode
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryStreamedHydration>{children}</ReactQueryStreamedHydration>
+      <ReactQueryStreamedHydration>
+        {children}
+      </ReactQueryStreamedHydration>
     </QueryClientProvider>
   );
 }

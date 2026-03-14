@@ -1,30 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
+"use client";
+import { getDoctors } from "@/app/(commonLayout)/consultation/_actions";
+import { useQuery } from "@tanstack/react-query";
 
-import { getDoctors } from '@/app/(commonLayout)/consultation/_actions';
-import { useQuery } from '@tanstack/react-query';
+const DoctorsList = () => {
+     const { data : doctorData } = useQuery({
+       queryKey: ["doctors"],
+       queryFn: () => getDoctors(),
+     });
 
-export default function DoctorsList() {
-  const { data } = useQuery({
-    queryKey: ['doctors'],
-    queryFn: () => getDoctors(),
-  });
-  console.log(data);
 
-  //^ Non-prefetched data fetching example. Data will be fetched after render, not suitable for SSR and mapping over data
-  //   const { data: nonPrefetchedData } = useQuery({
-  //     queryKey: ['doctors-non-prefetched'],
-  //     queryFn: () => getDoctors(),
-  //   });
-  //   console.log(nonPrefetchedData);
+     //non-prefetched query example
+    //  const {data : nonPrefetchedData} = useQuery({
+    //    queryKey: ["doctors-non-prefetched"],
+    //    queryFn: () => getDoctors(),
+    //  });
+
 
   return (
-    <div>
-      <h2>DoctorsList</h2>
-
-      {data?.data?.map((doctor: any) => (
-        <p key={doctor.id}>{doctor.name}</p>
-      ))}
-    </div>
-  );
+    <div>{doctorData!.data.map((doctor: any) => (
+      <div key={doctor.id}>{doctor.name}</div>
+    ))}</div>
+  )
 }
+
+export default DoctorsList

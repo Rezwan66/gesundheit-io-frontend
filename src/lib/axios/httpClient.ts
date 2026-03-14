@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { getNewTokensWithRefreshToken } from '@/services/auth.services';
 import { ApiResponse } from '@/types/api.types';
 import axios from 'axios';
-import { isTokenExpiringSoon } from '../tokenUtils';
 import { cookies, headers } from 'next/headers';
-import { getNewTokensWithRefreshToken } from '@/services/auth.services';
+import { isTokenExpiringSoon } from '../tokenUtils';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -12,12 +12,15 @@ if (!API_BASE_URL) {
 }
 
 async function tryRefreshToken(accessToken: string, refreshToken: string): Promise<void> {
-  if (!isTokenExpiringSoon(accessToken)) return;
+  if (!isTokenExpiringSoon(accessToken)) {
+    return;
+  }
 
   const requestHeader = await headers();
 
-  // Avoid multiple refresh attempts in the same request lifecycle
-  if (requestHeader.get('x-token-refreshed') === '1') return;
+  if (requestHeader.get('x-token-refreshed') === '1') {
+    return; // avoid multiple refresh attempts in the same request lifecycle
+  }
 
   try {
     await getNewTokensWithRefreshToken(refreshToken);
@@ -35,12 +38,11 @@ const axiosInstance = async () => {
     await tryRefreshToken(accessToken, refreshToken);
   }
 
-  //Send our tokens to the axios request
-  //# E.g. Cookie: "accessToken=xyz123; refreshToken=abc456"
   const cookieHeader = cookieStore
     .getAll()
     .map(cookie => `${cookie.name}=${cookie.value}`)
     .join('; ');
+  // eg Cookie: "accessToken=abc123; refreshToken=def456"
 
   const instance = axios.create({
     baseURL: API_BASE_URL,
@@ -50,6 +52,7 @@ const axiosInstance = async () => {
       Cookie: cookieHeader,
     },
   });
+
   return instance;
 };
 

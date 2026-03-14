@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 const BASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 if (!BASE_API_URL) {
-  throw new Error('API_BASE_URL is not defined in environment variables');
+  throw new Error('NEXT_PUBLIC_API_BASE_URL is not defined');
 }
 
 export async function getNewTokensWithRefreshToken(refreshToken: string): Promise<boolean> {
@@ -19,9 +19,12 @@ export async function getNewTokensWithRefreshToken(refreshToken: string): Promis
       },
     });
 
-    if (!res.ok) return false;
+    if (!res.ok) {
+      return false;
+    }
 
     const { data } = await res.json();
+
     const { accessToken, refreshToken: newRefreshToken, token } = data;
 
     if (accessToken) {
@@ -33,7 +36,7 @@ export async function getNewTokensWithRefreshToken(refreshToken: string): Promis
     }
 
     if (token) {
-      await setTokenInCookies('better-auth_session_token', token, 24 * 60 * 60); // 1 day in seconds
+      await setTokenInCookies('better-auth.session_token', token, 24 * 60 * 60); // 1 day in seconds
     }
 
     return true;
@@ -44,21 +47,36 @@ export async function getNewTokensWithRefreshToken(refreshToken: string): Promis
 }
 
 export async function getUserInfo() {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get('accessToken')?.value;
+  try {
+    const cookieStore = await cookies();
+    // console.log({ cookieStore });
+    const accessToken = cookieStore.get('accessToken')?.value;
+    const sessionToken = cookieStore.get('better-auth_session_token')?.value;
 
-  if (!accessToken) return null;
+    // console.log({ accessToken, sessionToken });
 
-  const res = await fetch(`${BASE_API_URL}/auth/me`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `accessToken=${accessToken}`,
-    },
-  });
+    if (!accessToken) {
+      return null;
+    }
 
-  if (!res.ok) return null;
+    const res = await fetch(`${BASE_API_URL}/auth/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: `accessToken=${accessToken}; better-auth.session_token=${sessionToken}`,
+      },
+    });
 
-  const { data } = await res.json();
-  return data;
+    if (!res.ok) {
+      console.error('Failed to fetch user info:', res.status, res.statusText);
+      return null;
+    }
+
+    const { data } = await res.json();
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching user info:', error);
+    return null;
+  }
 }
