@@ -51,7 +51,7 @@ export async function getUserInfo() {
     const cookieStore = await cookies();
     // console.log({ cookieStore });
     const accessToken = cookieStore.get('accessToken')?.value;
-    const sessionToken = cookieStore.get('better-auth_session_token')?.value;
+    const sessionToken = cookieStore.get('better-auth.session_token')?.value;
 
     // console.log({ accessToken, sessionToken });
 
